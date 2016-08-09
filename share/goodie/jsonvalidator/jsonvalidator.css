@@ -17,6 +17,12 @@
 .zci--json_validator .json_validator--result__wrap {
     margin-top: 1em;
 }
+.zci--json_validator button[disabled] {
+    color: #b4b4b4;
+    border-color: #b4b4b4;
+    font-weight: 600;
+    cursor: not-allowed;
+}
 
 /* Mobile */
 .is-mobile .zci--json_validator textarea {

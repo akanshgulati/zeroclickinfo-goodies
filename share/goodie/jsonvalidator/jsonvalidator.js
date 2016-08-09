@@ -29,25 +29,27 @@ DDH.json_validator.build = function (ops) {
             DDG.require('jsonlint', function () {
                 $validateButton
                     .text('Validate JSON')
-                    .prop('disabled', false)
-                    .css('cursor', 'pointer')
-                    .removeClass('btn--skeleton')
-                    .addClass('btn--primary is-hidden');
+                    .prop('disabled', true)
+                    .removeClass('btn--skeleton');
                 $clearButton
                     .addClass('is-hidden');
             });
             function showButtons() {
-                $validateButton.removeClass('is-hidden');
+                $validateButton
+                    .prop('disabled', false)
+                    .addClass('btn--primary');
                 $clearButton.removeClass('is-hidden');
             }
 
             function hideButtons() {
-                $validateButton.addClass('is-hidden');
+                $validateButton
+                    .prop('disabled', true)
+                    .removeClass('btn--primary');
                 $clearButton.addClass('is-hidden');
             }
 
             var oldVal = '';
-            $input.on("keyup blur", function () {
+            $input.on("change input propertychange", function () {
                 var currentVal = $(this).val();
                 if (currentVal !== oldVal) {
                     currentVal.length ? showButtons() : hideButtons();
@@ -77,7 +79,7 @@ DDH.json_validator.build = function (ops) {
 
             $clearButton.click(function () {
                 // clear the input textarea
-                $input.val('');
+                $input.val('').change();
 
                 // hide the results section
                 $result.parent().addClass('is-hidden');
