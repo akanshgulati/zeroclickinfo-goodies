@@ -1,6 +1,6 @@
 DDH.json_validator = DDH.json_validator || {};
 
-DDH.json_validator.build = function(ops) {
+DDH.json_validator.build = function (ops) {
     "use strict";
 
     // Flag to make denote if IA has been shown or not
@@ -9,7 +9,7 @@ DDH.json_validator.build = function(ops) {
     ops.data.rows = is_mobile ? 8 : 20;
 
     return {
-        onShow: function() {
+        onShow: function () {
             // Make sure this function is run only once, the first time
             // the IA is shown otherwise things will get initialized
             // more than once
@@ -32,9 +32,29 @@ DDH.json_validator.build = function(ops) {
                     .prop('disabled', false)
                     .css('cursor', 'pointer')
                     .removeClass('btn--skeleton')
-                    .addClass('btn--primary');
+                    .addClass('btn--primary is-hidden');
+                $clearButton
+                    .addClass('is-hidden');
             });
+            function showButtons() {
+                $validateButton.removeClass('is-hidden');
+                $clearButton.removeClass('is-hidden');
+            }
 
+            function hideButtons() {
+                $validateButton.addClass('is-hidden');
+                $clearButton.addClass('is-hidden');
+            }
+
+            var oldVal = '';
+            $input.on("keyup blur", function () {
+                var currentVal = $(this).val();
+                if (currentVal !== oldVal) {
+                    currentVal.length ? showButtons() : hideButtons();
+                    oldVal = currentVal;
+                }
+
+            });
             $validateButton.click(function () {
                 $result.parent().removeClass('is-hidden');
                 try {
@@ -46,7 +66,7 @@ DDH.json_validator.build = function(ops) {
                             .removeClass('tx-clr--red-dark')
                             .addClass('tx-clr--green');
                     }
-                } catch(e) {
+                } catch (e) {
                     // JSON is invalid, show the exception (error)
                     $result
                         .html(e)
