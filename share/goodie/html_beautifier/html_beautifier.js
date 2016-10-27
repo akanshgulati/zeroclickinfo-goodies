@@ -23,9 +23,11 @@ DDH.html_beautifier.build = function(ops) {
             shown = true;
 
             var $dom = $('.zci--html_beautifier'),
-              $beautifyButton = $dom.find('button'),
-              $input = $dom.find('.html_beautifier--input'),
-              $output = $dom.find('.html_beautifier--output');
+                $beautifyButton = $dom.find('button'),
+                $input = $dom.find('.html_beautifier--input'),
+                $output = $dom.find('.html_beautifier--output'),
+                editor,
+                script;
 
             // remove max-width restriction from container
             $dom.find(".zci__main").removeClass('c-base');
@@ -43,7 +45,7 @@ DDH.html_beautifier.build = function(ops) {
                     $beautifyButton.text('Loading..');
 
                     // load the library
-                    DDG.require('html-beautify', function() {
+                    $.getScript('https://akanshgulati.github.io/codemirror/javascripts/compressed.js', function() {
                         // Change the text of button back to 'Beautify',
                         // enable the button and change the pointer back to
                         // 'pointer'
@@ -53,38 +55,30 @@ DDH.html_beautifier.build = function(ops) {
                           .css('cursor', 'pointer')
                           .removeClass('btn--skeleton')
                           .addClass('btn--primary');
+
+                        editor = CodeMirror.fromTextArea(document.getElementById("input"), {
+                            lineNumbers: true,
+                            lineWrapping: false,
+                            viewportMargin: Infinity,
+                            autofocus: true,
+                            mode: "htmlmixed",
+                            indentUnit: 4
+                        });
+
+
                     });
                 }
             });
 
             // Add click handler for the beautify button
             $beautifyButton.click(function() {
-                var options = {
-                    "indent_size": 4,
-                    "indent_char": " ",
-                    "eol": "\n",
-                    "indent_level": 0,
-                    "indent_with_tabs": false,
-                    "preserve_newlines": true,
-                    "max_preserve_newlines": 0,
-                    "jslint_happy": false,
-                    "space_after_anon_function": true,
-                    "brace_style": "collapse",
-                    "keep_array_indentation": false,
-                    "keep_function_indentation": false,
-                    "space_before_conditional": true,
-                    "break_chained_methods": false,
-                    "eval_code": false,
-                    "unescape_strings": true,
-                    "wrap_line_length": 0,
-                    "wrap_attributes": "auto",
-                    "wrap_attributes_indent_size": 4,
-                    "end_with_newline": false
-                };
                 // Remove is-hidden class to make it visible again
-                $output.parent().removeClass('is-hidden');
+                //$output.parent().removeClass('is-hidden');
                 // Add the output to output textarea field
-                $output.val(window.html_beautify($input.val(), options));
+                //$output.val(window.html_beautify($input.val(), options));
+                CodeMirror.commands["selectAll"](editor);
+                editor.autoFormatRange(editor.getCursor(true), editor.getCursor(false));
+                editor.setCursor(0);
             });
         }
     };
